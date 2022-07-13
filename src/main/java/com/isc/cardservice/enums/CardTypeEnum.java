@@ -2,9 +2,7 @@ package com.isc.cardservice.enums;
 
 public enum CardTypeEnum {
     CASH(1),
-    CREDIT(2),
-    GIFT(3),
-    LOAN(4);
+    CREDIT(2);
 
     private int value;
 

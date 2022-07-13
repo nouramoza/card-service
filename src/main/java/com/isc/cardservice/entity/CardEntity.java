@@ -4,11 +4,13 @@ import com.isc.cardservice.enums.CardTypeEnum;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "CARD")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CardEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,9 +18,11 @@ public class CardEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ACCOUNT_ID", referencedColumnName = "ID", nullable=false)
+    @ToString.Exclude
     private AccountEntity accountEntity;
 
-    @Column(name = "CARD_NUMBER", nullable=false, unique = true)
+    @Column(name = "CARD_NUMBER", nullable=false, unique = true, length = 16)
+    @Size(min = 16, max = 16)
     @NonNull
     private String cardNumber;
 
@@ -26,27 +30,18 @@ public class CardEntity {
     @NonNull
     private CardTypeEnum cardType;
 
-    @Column(name = "ISSUER_NAME", nullable=false)
+    @Column(name = "ISSUER_NAME", nullable=false, length = 20)
     @NonNull
     private String issuerName;
 
-    @Column(name = "ISSUER_CODE", nullable=false)
+    @Column(name = "ISSUER_CODE", nullable=false, length = 6)
+    @Size(min = 6, max = 6)
     @NonNull
     private String issuerCode;
 
-//    @Column(name = "CVV2", nullable=false)
-//    @NonNull
-//    private int cvv2;
-
     @Column(name = "EXPIRE_DATE", nullable=false)
     @NonNull
-    private Date expireDate;
-
-//    @Column(name = "PIN", nullable=false)
-//    private String pin;
-
-//    @Column(name = "INCORRECT_PIN_COUNT", nullable=false)
-//    private int incorrectPinCount;
+    private String expireDate;
 
     @Column(name = "IS_ACTIVE")
     private Boolean isActive;

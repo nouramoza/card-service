@@ -1,14 +1,12 @@
 package com.isc.cardservice.service;
 
-import com.isc.cardservice.web.dto.AccountDto;
-import com.isc.cardservice.web.dto.CardDto;
-import com.isc.cardservice.web.dto.response.BankRestResponse;
-import org.springframework.stereotype.Service;
+import com.isc.cardservice.web.dto.AddCardDto;
+import com.isc.cardservice.web.dto.SearchCardDto;
+import com.isc.cardservice.web.dto.response.GenericRestResponse;
 
-//@Service
 public interface CardService {
-//    public BankRestResponse addCard(CardDto cardDto);
+    GenericRestResponse addCard(AddCardDto addCardDto);
 
-//    public BankRestResponse addAccount(AccountDto accountDto);
+    GenericRestResponse getCard(SearchCardDto searchCardDto);
 
 }

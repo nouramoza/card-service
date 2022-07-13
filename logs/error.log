@@ -1,0 +1,6 @@
+2022-07-13 14:25:48,559 ERROR com.isc.cardservice.service.serviceImpl.CardServiceImpl [main] The Customer Has An Active Card With Same Type
+2022-07-13 14:25:48,692 ERROR com.isc.cardservice.service.serviceImpl.CardServiceImpl [main] The Card Is Not Active
+2022-07-13 14:25:48,702 ERROR com.isc.cardservice.service.serviceImpl.CardServiceImpl [main] Card Not Found
+2022-07-13 14:25:48,712 ERROR com.isc.cardservice.service.serviceImpl.CardServiceImpl [main] The Card Is Expired
+2022-07-13 14:28:15,567 ERROR com.isc.cardservice.service.serviceImpl.CardServiceImpl [http-nio-8081-exec-1] Input Is ot Correct
+2022-07-13 14:28:40,835 ERROR com.isc.cardservice.service.serviceImpl.CardServiceImpl [http-nio-8081-exec-2] Input Is ot Correct

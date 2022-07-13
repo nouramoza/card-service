@@ -10,6 +10,7 @@ import java.util.Date;
 public class CardDto {
     private Long id;
 
+    @NonNull
     private AccountDto accountDto;
 
     @NonNull
@@ -28,5 +29,4 @@ public class CardDto {
     private Date expireDate;
 
     private Boolean isActive;
-
 }

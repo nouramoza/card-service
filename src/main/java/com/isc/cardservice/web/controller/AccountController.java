@@ -1,8 +1,14 @@
 package com.isc.cardservice.web.controller;
 
 import com.isc.cardservice.service.AccountService;
+import com.isc.cardservice.web.dto.AccountDto;
+import com.isc.cardservice.web.dto.response.GenericRestResponse;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/account-service")
@@ -13,9 +19,14 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-//    @RequestMapping(value = "/requestManagement", method = RequestMethod.POST)
-//    public BankRestResponse requestManagement(@RequestBody AccountRequestDto accountRequestDto) {
-//        return accountService.requestManagement(accountRequestDto);
-//
-//    }
+    @RequestMapping(value = "/getAllAccounts", method = RequestMethod.GET)
+    public GenericRestResponse getAllAccounts() {
+        return accountService.getAllAccount();
+    }
+
+    @RequestMapping(value = "/addAccounts", method = RequestMethod.POST)
+    public GenericRestResponse addAccounts(@RequestBody List<AccountDto> accountDtoList) {
+        return accountService.addAccounts(accountDtoList);
+
+    }
 }

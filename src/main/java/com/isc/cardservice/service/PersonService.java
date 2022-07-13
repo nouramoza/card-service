@@ -1,8 +1,16 @@
 package com.isc.cardservice.service;
 
 import com.isc.cardservice.web.dto.PersonDto;
-import com.isc.cardservice.web.dto.response.BankRestResponse;
+import com.isc.cardservice.web.dto.response.GenericRestResponse;
+
+import java.util.List;
 
 public interface PersonService {
-    BankRestResponse addPerson(PersonDto personDto);
+
+    GenericRestResponse getAllPeople();
+
+    GenericRestResponse addPerson(PersonDto personDto);
+
+    GenericRestResponse addPeople(List<PersonDto> personDtoList);
+
 }

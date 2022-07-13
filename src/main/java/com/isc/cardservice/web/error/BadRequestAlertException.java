@@ -27,6 +27,4 @@ public class BadRequestAlertException extends Exception{
         parameters.put("params", entityName);
         return parameters;
     }
-
-
 }

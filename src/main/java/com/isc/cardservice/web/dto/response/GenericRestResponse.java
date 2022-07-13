@@ -1,22 +1,22 @@
 package com.isc.cardservice.web.dto.response;
 
-public class BankRestResponse<T> {
+public class GenericRestResponse<T> {
 
     public interface STATUS {
         int SUCCESS = 0;
         int FAILURE = 1;
     }
 
-    public BankRestResponse() {
+    public GenericRestResponse() {
 
     }
 
-    public BankRestResponse(int status, String message) {
+    public GenericRestResponse(int status, String message) {
         this.message = message;
         this.status = status;
     }
 
-    public BankRestResponse(int status, String message, T data) {
+    public GenericRestResponse(int status, String message, T data) {
         this.message = message;
         this.status = status;
         this.data = data;
@@ -52,7 +52,7 @@ public class BankRestResponse<T> {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("BankRestResponse");
+        final StringBuffer sb = new StringBuffer("GenericRestResponse");
         sb.append("data=").append(data);
         sb.append(", message='").append(message).append('\'');
         sb.append(", status=").append(status);

@@ -3,10 +3,9 @@ package com.isc.cardservice.web.dto;
 import com.sun.istack.internal.NotNull;
 import lombok.*;
 
-import java.util.List;
-
-
-@Data public class AccountDto {
+@Data
+@AllArgsConstructor
+public class AccountDto {
     private Long id;
 
     @NonNull
@@ -19,7 +18,4 @@ import java.util.List;
     private Long balance;
 
     private Boolean isActive;
-
-    private List<CardDto> cardDtoList;
-
 }
