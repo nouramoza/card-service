@@ -21,7 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
+
+/**
+ * Service Implementation for Card-Service .
+ */
 
 @Service
 @Transactional
@@ -36,6 +39,12 @@ public class CardServiceImpl implements CardService {
     @Autowired
     private AccountRepository accountRepository;
 
+    /**
+     * AddCard
+     *
+     * @param addCardDto adding new card to for an existing account
+     * @return GenericRestResponse adding card response
+     */
     @Override
     public GenericRestResponse addCard(AddCardDto addCardDto) {
         GenericRestResponse genericRestResponse = null;
@@ -48,19 +57,7 @@ public class CardServiceImpl implements CardService {
             }
 
             if (genericRestResponse == null) {
-                CardEntity cardEntity = modelMapper.map(addCardDto, CardEntity.class);
-                cardEntity.setCardNumber(generateCardNumber(addCardDto));
-                cardEntity.setAccountEntity(accountEntity);
-                cardEntity.setExpireDate(calculateExpireDate(addCardDto.getCardType()));
-                cardEntity.setIsActive(true);
-                cardRepository.saveAndFlush(cardEntity);
-                genericRestResponse = new GenericRestResponse(GenericRestResponse.STATUS.SUCCESS,
-                        ConstantsUtil.ResponseMessage.CARD_ADDED_SUCCESSFULLY,
-                        cardEntity.toString());
-                if (accountEntity.getCardEntitySet() == null) {
-                    accountEntity.setCardEntitySet(new HashSet<>());
-                }
-                accountEntity.getCardEntitySet().add(cardEntity);
+                genericRestResponse = generateCardEntity(addCardDto, accountEntity);
             }
         } catch (Exception e) {
             logger.error(ErrorConstants.CardMessage.INCORRECT_INPUT_MSG);
@@ -71,6 +68,12 @@ public class CardServiceImpl implements CardService {
         return genericRestResponse;
     }
 
+    /**
+     * validate input values to adding new card
+     *
+     * @param addCardDto adding card input data
+     * @return GenericRestResponse input validation result
+     */
     private GenericRestResponse inputValidation(AddCardDto addCardDto) {
         GenericRestResponse genericRestResponse = null;
         if (addCardDto.getAccountNumber().length() != 10 ||
@@ -81,10 +84,16 @@ public class CardServiceImpl implements CardService {
                     ErrorConstants.CardMessage.INCORRECT_INPUT_MSG);
             logger.error(ErrorConstants.CardMessage.INCORRECT_INPUT_MSG);
         }
-
         return genericRestResponse;
     }
 
+
+    /**
+     * validate logical
+     *
+     * @param addCardDto adding card input data
+     * @return GenericRestResponse logical validation result
+     */
     private GenericRestResponse addCardValidation(AddCardDto addCardDto,
                                                   AccountEntity accountEntity) {
         GenericRestResponse genericRestResponse = null;
@@ -108,20 +117,48 @@ public class CardServiceImpl implements CardService {
         return genericRestResponse;
     }
 
+    /**
+     * generate new Card
+     *
+     * @param addCardDto adding card input data
+     * @return GenericRestResponse generate card response
+     */
+    private GenericRestResponse generateCardEntity(AddCardDto addCardDto, AccountEntity accountEntity) {
+        GenericRestResponse genericRestResponse;
+        CardEntity cardEntity = modelMapper.map(addCardDto, CardEntity.class);
+        cardEntity.setCardNumber(generateCardNumber(addCardDto));
+        cardEntity.setAccountEntity(accountEntity);
+        cardEntity.setExpireDate(calculateExpireDate(addCardDto.getCardType()));
+        cardEntity.setIsActive(true);
+        cardRepository.saveAndFlush(cardEntity);
+        genericRestResponse = new GenericRestResponse(GenericRestResponse.STATUS.SUCCESS,
+                ConstantsUtil.ResponseMessage.CARD_ADDED_SUCCESSFULLY,
+                cardEntity.toString());
+        return genericRestResponse;
+    }
+
+    /**
+     * generate card number
+     *
+     * @param addCardDto adding card input data
+     * @return String generated card number
+     */
     private String generateCardNumber(AddCardDto addCardDto) {
         StringBuilder cardNumber = new StringBuilder(addCardDto.getIssuerCode());
         cardNumber.append(String.format("%02d", addCardDto.getCardType().getValue()));
-
         int min = 1;
         int max = 99999999;
-
         int random_int = (int) Math.floor(Math.random() * (max - min + 1) + min);
         cardNumber.append(String.format("%08d", random_int));
-
-
         return cardNumber.toString();
     }
 
+    /**
+     * calculate card expire month and year based on cardType and current Date
+     *
+     * @param cardTypeEnum type of card
+     * @return String expire date string value(year && month)
+     */
     private String calculateExpireDate(CardTypeEnum cardTypeEnum) {
         Date expireDate = null;
         switch (cardTypeEnum) {
@@ -142,6 +179,12 @@ public class CardServiceImpl implements CardService {
         return expireDateStr;
     }
 
+    /**
+     * compare card expire date and current day
+     *
+     * @param dateStr card expire date
+     * @return Boolean checking card expire date result
+     */
     private Boolean checkCardExpired(String dateStr) {
         String currentDateStr = getDateStr(new Date());
         if (Integer.valueOf(dateStr.substring(0,4)) < Integer.valueOf(currentDateStr.substring(0, 4))) {
@@ -153,6 +196,12 @@ public class CardServiceImpl implements CardService {
         return false;
     }
 
+    /**
+     * search for card
+     *
+     * @param searchCardDto search card input values
+     * @return GenericRestResponse card search result
+     */
     @Override
     public GenericRestResponse getCard(SearchCardDto searchCardDto) {
         GenericRestResponse genericRestResponse;
@@ -160,7 +209,7 @@ public class CardServiceImpl implements CardService {
         try {
             CardEntity cardEntity = cardRepository.searchForPersonCardType(searchCardDto.getCardNumber(),
                     searchCardDto.getIssuerCode(), searchCardDto.getCardType(), searchCardDto.getNationalCode());
-            genericRestResponse = cardValidation(searchCardDto, cardEntity);
+            genericRestResponse = cardValidation(cardEntity);
             if (genericRestResponse == null) {
                 genericRestResponse = new GenericRestResponse(GenericRestResponse.STATUS.SUCCESS,
                         ConstantsUtil.ResponseMessage.CARD_FOUNDED, cardEntity);
@@ -173,7 +222,13 @@ public class CardServiceImpl implements CardService {
         return genericRestResponse;
     }
 
-    private GenericRestResponse cardValidation(SearchCardDto searchCardDto, CardEntity cardEntity) {
+    /**
+     * validate founded cardEntity
+     *
+     * @param cardEntity founded cardEntity
+     * @return GenericRestResponse card entity validation response
+     */
+    private GenericRestResponse cardValidation(CardEntity cardEntity) {
         GenericRestResponse genericRestResponse = null;
         if (cardEntity == null) {
 

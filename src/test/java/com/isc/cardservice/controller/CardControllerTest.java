@@ -1,5 +1,7 @@
 package com.isc.cardservice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.isc.cardservice.enums.CardTypeEnum;
 import com.isc.cardservice.util.ConstantsUtil;
 import com.isc.cardservice.web.dto.AddCardDto;
@@ -20,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 
-import static com.isc.cardservice.controller.BasicInfoControllerTest.mapToJson;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -134,5 +135,10 @@ public class CardControllerTest {
 				.andExpect(content().string(containsString("\"status\":".concat(String.valueOf(GenericRestResponse.STATUS.FAILURE)))))
                 .andDo(print())
                 .andReturn();
+    }
+
+    protected static String mapToJson(Object obj) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(obj);
     }
 }
